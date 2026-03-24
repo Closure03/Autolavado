@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AutoLavado Cloud — Gestión de Vehículos</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">🚗</span>
+        <div>
+          <h1>AutoLavado Cloud</h1>
+          <span class="logo-sub">Azure + GCP PostgreSQL</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <button class="nav-btn active" data-view="vehiculos">🚗 Vehículos</button>
+        <button class="nav-btn" data-view="servicios">🧼 Servicios</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <div id="toast" class="toast hidden"></div>
+
+    <!-- ══ VISTA: VEHÍCULOS ══════════════════════════════════════ -->
+    <section id="view-vehiculos" class="view active">
+
+      <div class="section-header">
+        <div>
+          <h2>Vehículos Registrados</h2>
+          <p class="subtitle">Gestión completa del parque de clientes</p>
+        </div>
+        <button class="btn btn-primary" id="btn-nuevo-vehiculo">+ Registrar vehículo</button>
+      </div>
+
+      <!-- Formulario vehículo -->
+      <div id="form-vehiculo" class="card form-card hidden">
+        <h3 id="form-vehiculo-titulo">🚗 Nuevo vehículo</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label>Placa *</label>
+            <input type="text" id="v-placa" placeholder="ABC-123" maxlength="10"/>
+          </div>
+          <div class="field">
+            <label>Marca *</label>
+            <input type="text" id="v-marca" placeholder="Toyota"/>
+          </div>
+          <div class="field">
+            <label>Modelo *</label>
+            <input type="text" id="v-modelo" placeholder="Corolla"/>
+          </div>
+          <div class="field">
+            <label>Año</label>
+            <input type="number" id="v-anio" placeholder="2022" min="1990" max="2030"/>
+          </div>
+          <div class="field">
+            <label>Color</label>
+            <input type="text" id="v-color" placeholder="Blanco"/>
+          </div>
+          <div class="field">
+            <label>Tipo *</label>
+            <select id="v-tipo">
+              <option value="sedan">Sedán</option>
+              <option value="camioneta">Camioneta</option>
+              <option value="moto">Moto</option>
+              <option value="bus">Bus</option>
+              <option value="camion">Camión</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Propietario *</label>
+            <input type="text" id="v-propietario" placeholder="Nombre completo"/>
+          </div>
+          <div class="field">
+            <label>Teléfono</label>
+            <input type="text" id="v-telefono" placeholder="3001234567"/>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" id="btn-cancelar-vehiculo">Cancelar</button>
+          <button class="btn btn-primary" id="btn-guardar-vehiculo">💾 Guardar</button>
+        </div>
+      </div>
+
+      <!-- Tabla vehículos -->
+      <div class="card">
+        <div id="loading-vehiculos" class="loading">⏳ Cargando vehículos…</div>
+        <div id="error-vehiculos" class="error-msg hidden"></div>
+        <table id="tabla-vehiculos" class="table hidden">
+          <thead>
+            <tr>
+              <th>ID</th><th>Placa</th><th>Vehículo</th><th>Tipo</th>
+              <th>Color</th><th>Propietario</th><th>Teléfono</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-vehiculos"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ VISTA: SERVICIOS ═══════════════════════════════════════ -->
+    <section id="view-servicios" class="view hidden">
+
+      <div class="section-header">
+        <div>
+          <h2>Servicios de Lavado</h2>
+          <p class="subtitle">Registro y seguimiento de servicios</p>
+        </div>
+        <button class="btn btn-primary" id="btn-nuevo-servicio">+ Nuevo servicio</button>
+      </div>
+
+      <!-- Formulario servicio -->
+      <div id="form-servicio" class="card form-card hidden">
+        <h3>🧼 Registrar servicio</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label>Vehículo *</label>
+            <select id="s-vehiculo"><option value="">Cargando…</option></select>
+          </div>
+          <div class="field">
+            <label>Tipo de servicio *</label>
+            <select id="s-tipo">
+              <option value="lavado_basico">🫧 Lavado Básico</option>
+              <option value="lavado_completo">🚿 Lavado Completo</option>
+              <option value="lavado_premium">✨ Lavado Premium</option>
+              <option value="encerado">🌟 Encerado</option>
+              <option value="tapizado">🪑 Tapizado</option>
+              <option value="motor">⚙️ Lavado de Motor</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Precio (COP) *</label>
+            <input type="number" id="s-precio" placeholder="25000" min="0"/>
+          </div>
+          <div class="field">
+            <label>Estado</label>
+            <select id="s-estado">
+              <option value="pendiente">⏳ Pendiente</option>
+              <option value="en_proceso">🔄 En proceso</option>
+              <option value="completado">✅ Completado</option>
+              <option value="cancelado">❌ Cancelado</option>
+            </select>
+          </div>
+          <div class="field field-full">
+            <label>Observaciones</label>
+            <textarea id="s-obs" rows="2" placeholder="Notas adicionales…"></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" id="btn-cancelar-servicio">Cancelar</button>
+          <button class="btn btn-primary" id="btn-guardar-servicio">💾 Guardar</button>
+        </div>
+      </div>
+
+      <!-- Tabla servicios -->
+      <div class="card">
+        <div id="loading-servicios" class="loading">⏳ Cargando servicios…</div>
+        <div id="error-servicios" class="error-msg hidden"></div>
+        <table id="tabla-servicios" class="table hidden">
+          <thead>
+            <tr>
+              <th>ID</th><th>Placa</th><th>Tipo de Servicio</th>
+              <th>Precio</th><th>Estado</th><th>Fecha</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-servicios"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ MODAL: historial de vehículo ═══════════════════════════ -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="modal-titulo">Historial de servicios</h3>
+          <button class="modal-close" id="btn-cerrar-modal">✕</button>
+        </div>
+        <div id="modal-body" class="modal-body"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>🚗 AutoLavado Cloud · Backend: <strong>Azure App Service</strong> · DB: <strong>GCP Cloud SQL PostgreSQL</strong> · Frontend: <strong>Azure Static Web Apps</strong></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
