@@ -4,6 +4,12 @@ Backend: Azure App Service | DB: GCP Cloud SQL (PostgreSQL)
 Endpoints mínimos requeridos por el documento de actividad.
 """
 
+import os
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env si existe (desarrollo)
+load_dotenv()
+
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
