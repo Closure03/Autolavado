@@ -10,7 +10,7 @@ const API_BASE = "https://autolavado-api-hka0hhbcfygjawey.canadacentral-01.azure
 
 // ── ESTADO ───────────────────────────────────────────────────────
 let editandoVehiculoId = null;
-let vehiculosCache     = [];   // para el select de servicios y la tablaaaaaa
+let vehiculosCache     = [];   // para el select de servicios y la tabla
 
 // ── PRECIOS SUGERIDOS ────────────────────────────────────────────
 const PRECIOS = {
