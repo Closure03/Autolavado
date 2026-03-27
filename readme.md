@@ -1,187 +1,298 @@
-# Proyecto Autolavado
+# 🚗 AutoLavado Cloud — Sistema de Gestión de Vehículos
 
-Sistema CRUD de gestión de vehículos y servicios de autolavado, desarrollado como proyecto académico.
+> Aplicación web full-stack desplegada en infraestructura multi-cloud.
+> **Frontend + Backend → Microsoft Azure** | **Base de datos PostgreSQL → Google Cloud Platform**
 
-## Integrantes del Grupo
+🌐 **Aplicación en producción:** [https://icy-forest-05be6d20f.2.azurestaticapps.net](https://icy-forest-05be6d20f.2.azurestaticapps.net)
 
-| Nombre | Responsabilidad |
-|--------|----------------|
-| Santiago Garzón Silva (Líder del proyecto) | Backend - Azure App Service |
-| Mateo Enrique Bermejo Ramírez | Frontend - Azure Static Web Apps |
-| Jonathan Pedroza Bernal | Base de datos - GCP Cloud SQL |
+---
 
-## Descripción del Proyecto y Dominio
+## 👥 Integrantes y división de responsabilidades
 
-Sistema web para la gestión de un autolavado, que permite registrar vehículos y servicios mediante operaciones CRUD. El dominio elegido es la administración de servicios de lavado automotriz.
+| Integrante | Rol |
+|---|---|
+| Santiago Garzón Silva (Líder del proyecto) | Backend: FastAPI, modelos, endpoints REST |
+| Mateo Enrique Bermejo Ramírez | Base de datos GCP Cloud SQL, schema, seed |
+| Jonathan Pedroza Bernal | Frontend HTML/CSS/JS, despliegue Azure Static Web Apps |
 
-## Stack Tecnológico
+---
+
+## 📋 Descripción del proyecto
+
+Sistema CRUD completo para la gestión de vehículos y servicios de un autolavado. Implementa dos entidades relacionadas:
+
+- **Vehículos** — entidad principal con CRUD completo (placa, marca, modelo, tipo, propietario)
+- **Servicios** — historial de lavados asociados a cada vehículo (tipo, precio, estado)
+
+---
+
+## ⚙️ Stack tecnológico
 
 | Capa | Tecnología |
-|------|-----------|
+|---|---|
 | Backend | FastAPI (Python 3.11) |
-| Base de datos | PostgreSQL 15 (GCP Cloud SQL) |
-| Frontend | HTML / CSS / JavaScript |
-| Despliegue Backend | Azure App Service |
-| Despliegue Frontend | Azure Static Web Apps |
-| CI/CD | GitHub Actions |
+| Base de datos | PostgreSQL 15 |
+| ORM | SQLAlchemy 2.0 |
+| Validación | Pydantic v2 |
+| Servidor | Uvicorn |
+| Frontend | HTML5 / CSS3 / JavaScript Vanilla |
 
-## Servicios Cloud Implementados
+---
 
-- **GCP Cloud SQL**: Instancia PostgreSQL 15 (`autolavado-db`) en `us-central1`
-- **Azure App Service**: Hosting del backend FastAPI (`autolavado-api`)
-- **Azure Static Web Apps**: Hosting del frontend estático
+## ☁️ Servicios cloud implementados
 
-## URLs de Acceso a la Aplicación Desplegada
+| Servicio | Proveedor | Uso |
+|---|---|---|
+| App Service (B1) | Microsoft Azure | Backend FastAPI |
+| Static Web Apps (Free) | Microsoft Azure | Frontend estático |
+| Cloud SQL PostgreSQL 15 | Google Cloud Platform | Base de datos |
 
-- **Repositorio**: [https://github.com/Closure03/Autolavado](https://github.com/Closure03/Autolavado)
-- **Frontend**: *(pendiente por desplegar)*
-- **Backend API**: *(pendiente por desplegar)*
-- **Documentación API (Swagger)**: *(pendiente por desplegar)*
+---
 
-## Diagrama de Arquitectura del Sistema
+## 🌐 URLs del sistema
+
+| Componente | URL |
+|---|---|
+| **Frontend** | https://icy-forest-05be6d20f.2.azurestaticapps.net |
+| **Backend API** | https://autolavado-api-hka0hhbcfygjawey.canadacentral-01.azurewebsites.net |
+| **Swagger UI** | https://autolavado-api-hka0hhbcfygjawey.canadacentral-01.azurewebsites.net/docs |
+| **Health check** | https://autolavado-api-hka0hhbcfygjawey.canadacentral-01.azurewebsites.net/ |
+
+---
+
+## 🏗️ Arquitectura del sistema
+
 ```
-┌─────────────────────────────────────────────────────────┐
-│                        CLIENTE                          │
-│              (Navegador Web - HTML/CSS/JS)              │
-└─────────────────────┬───────────────────────────────────┘
-                      │ HTTP/HTTPS
-                      ▼
-┌─────────────────────────────────────────────────────────┐
-│              AZURE STATIC WEB APPS                      │
-│                  (Frontend)                             │
-└─────────────────────┬───────────────────────────────────┘
-                      │ REST API
-                      ▼
-┌─────────────────────────────────────────────────────────┐
-│              AZURE APP SERVICE                          │
-│           FastAPI (Python 3.11)                         │
-│         autolavado-api.azurewebsites.net                │
-└─────────────────────┬───────────────────────────────────┘
-                      │ PostgreSQL (puerto 5432)
-                      ▼
-┌─────────────────────────────────────────────────────────┐
-│              GCP CLOUD SQL                              │
-│         PostgreSQL 15 - autolavado-db                   │
-│              us-central1 (Iowa)                         │
-└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                      USUARIO / BROWSER                          │
+└──────────────────────────────┬──────────────────────────────────┘
+                               │ HTTPS
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    MICROSOFT AZURE                               │
+│                                                                  │
+│  ┌──────────────────────────┐                                    │
+│  │  Azure Static Web Apps   │  https://icy-forest-...           │
+│  │  HTML / CSS / JavaScript │                                    │
+│  └────────────┬─────────────┘                                    │
+│               │ HTTPS → API REST                                 │
+│               ▼                                                  │
+│  ┌──────────────────────────┐                                    │
+│  │  Azure App Service (B1)  │  autolavado-api-hka0...           │
+│  │  FastAPI + Uvicorn       │  Python 3.11                       │
+│  │  Startup: cd backend &&  │                                    │
+│  │  uvicorn src.main:app    │                                    │
+│  └────────────┬─────────────┘                                    │
+└───────────────┼─────────────────────────────────────────────────┘
+                │ TCP 5432 / SSL
+                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                  GOOGLE CLOUD PLATFORM                           │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │  Cloud SQL — PostgreSQL 15                               │   │
+│  │  Instancia: autolavado-db  ·  Región: us-central1        │   │
+│  │  Base de datos: autolavado_db                            │   │
+│  └──────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-## Instrucciones de Instalación Local
+---
+
+## 🗂️ Estructura del repositorio
+
+```
+Autolavado/
+├── .github/
+│   └── workflows/
+│       ├── azure-static-web-apps-*.yml   # Deploy frontend → Azure Static Web Apps
+│       └── master_autolavado-api.yml     # Deploy backend → Azure App Service
+├── backend/
+│   ├── database/
+│   │   ├── schema.sql                    # Creación de tablas DDL
+│   │   └── seed.sql                      # Datos de prueba (10 vehículos, 12 servicios)
+│   ├── docs/
+│   │   ├── api-documentation.md
+│   │   ├── deployment-guide.md
+│   │   └── screenshots/
+│   ├── frontend/
+│   │   ├── index.html                    # Interfaz principal
+│   │   ├── style.css                     # Estilos (paleta Azure + GCP)
+│   │   └── script.js                     # Lógica CRUD + consumo API
+│   ├── src/
+│   │   ├── __init__.py
+│   │   ├── main.py                       # FastAPI: endpoints REST + CORS
+│   │   ├── models.py                     # SQLAlchemy: Vehiculo, Servicio
+│   │   ├── schemas.py                    # Pydantic v2: validación
+│   │   └── database.py                   # Conexión GCP Cloud SQL
+│   ├── .env                              # Variables locales (NO subir a GitHub)
+│   ├── requirements.txt                  # Dependencias Python
+│   └── test_connection.py                # Script de prueba de conexión DB
+├── video/
+│   └── sustentacion.mp4
+└── readme.md
+```
+
+---
+
+## 📡 Endpoints de la API
+
+### Vehículos — CRUD completo
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| `GET` | `/api/vehiculos` | Lista todos los vehículos |
+| `GET` | `/api/vehiculos/{id}` | Obtiene un vehículo por ID |
+| `POST` | `/api/vehiculos` | Registra un nuevo vehículo |
+| `PUT` | `/api/vehiculos/{id}` | Actualiza un vehículo |
+| `DELETE` | `/api/vehiculos/{id}` | Elimina un vehículo y sus servicios |
+
+### Servicios
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| `GET` | `/api/servicios` | Lista todos los servicios |
+| `POST` | `/api/servicios` | Registra un nuevo servicio |
+| `DELETE` | `/api/servicios/{id}` | Elimina un servicio |
+
+### Relación
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| `GET` | `/api/vehiculos/{id}/servicios` | Historial de servicios de un vehículo |
+
+---
+
+## 🚀 Instalación local
 
 ### Prerrequisitos
-- Python 3.11+
-- PostgreSQL instalado localmente o acceso a GCP Cloud SQL
-- Git
 
-### Pasos
+```
+Python 3.11+
+PostgreSQL (local) o acceso a GCP Cloud SQL
+Git
+```
 
-1. Clona el repositorio:
+### 1. Clonar el repositorio
+
 ```bash
 git clone https://github.com/Closure03/Autolavado.git
 cd Autolavado
 ```
 
-2. Crea el entorno virtual e instala dependencias:
+### 2. Configurar el entorno virtual
+
 ```bash
 cd backend
 python -m venv antenv
-source antenv/bin/activate  # En Windows: antenv\Scripts\activate
+source antenv/bin/activate        # Windows: antenv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. Crea el archivo `.env` en `backend/`:
-```bash
-cp .env.example .env
-```
+### 3. Configurar variables de entorno
 
-4. Configura la variable de entorno:
+Crea o edita el archivo `backend/.env`:
+
 ```env
-DATABASE_URL=postgresql://autolavado_user:PASSWORD@<IP_CLOUD_SQL>:5432/autolavado_db
+DATABASE_URL=postgresql://autolavado_user:TU_PASSWORD@IP_GCP:5432/autolavado_db
 ```
 
-5. Ejecuta los scripts de base de datos:
+### 4. Inicializar la base de datos
+
 ```bash
-psql -h <IP_CLOUD_SQL> -U autolavado_user -d autolavado_db -f database/schema.sql
-psql -h <IP_CLOUD_SQL> -U autolavado_user -d autolavado_db -f database/seed.sql
+# Crear la base de datos (si es local):
+psql -U postgres -c "CREATE DATABASE autolavado_db;"
+
+# Ejecutar schema y seed:
+psql -U postgres -d autolavado_db -f database/schema.sql
+psql -U postgres -d autolavado_db -f database/seed.sql
 ```
 
-## Comandos de Despliegue
+### 5. Correr el backend
 
-### Backend (Azure App Service)
-El despliegue es automático via GitHub Actions al hacer push a `master`:
-```bash
-git add .
-git commit -m "mensaje"
-git push origin master
-```
-
-### Ejecución local:
 ```bash
 cd backend
-uvicorn src.main:app --reload
+uvicorn src.main:app --reload --port 8000
 ```
 
-## API Endpoints
+API disponible en: http://localhost:8000  
+Swagger UI en: http://localhost:8000/docs
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/vehiculos` | Lista todos los vehículos |
-| POST | `/api/vehiculos` | Crear un vehículo |
-| GET | `/api/vehiculos/{id}` | Obtener vehículo por ID |
-| PUT | `/api/vehiculos/{id}` | Actualizar vehículo |
-| DELETE | `/api/vehiculos/{id}` | Eliminar vehículo |
-| GET | `/api/servicios` | Lista todos los servicios |
-| POST | `/api/servicios` | Crear un servicio |
-| GET | `/api/servicios/{id}` | Obtener servicio por ID |
-| PUT | `/api/servicios/{id}` | Actualizar servicio |
-| DELETE | `/api/servicios/{id}` | Eliminar servicio |
+### 6. Correr el frontend
 
-## Credenciales de Prueba
-
-| Campo | Valor |
-|-------|-------|
-| Usuario BD | `autolavado_user` |
-| Base de datos | `autolavado_db` |
-| Puerto | `5432` |
-| Host | `<IP_PUBLICA_GCP>` |
-
-> ⚠️ La contraseña y la IP real se comparten de forma privada con el docente.
-
-## Esquema de Base de Datos
-
-Ejecuta los scripts en `backend/database/`:
-- `schema.sql`: Crea las tablas (`vehiculos`, `servicios`)
-- `seed.sql`: Inserta datos de ejemplo (10 vehículos, 12 servicios)
-
-## Problemas Encontrados y Soluciones
-
-| Problema | Solución |
-|----------|----------|
-| `Site Disabled (CODE: 403)` en GitHub Actions | Iniciar el App Service desde Azure Portal |
-| `Node.js 20 actions are deprecated` | Agregar `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` en el workflow |
-| Tablas no existían al ejecutar schema.sql | Normal — el `DROP TABLE IF EXISTS` lo omite si no existen |
-
-## Capturas de Pantalla
-
-> 📷 *(Pendiente — agregar capturas del frontend funcionando, API Swagger, y base de datos)*
-
-## Configuración de la Base de Datos
-
-### Producción (Azure App Service)
-1. En Azure Portal ve a tu App Service → Configuración → Variables de entorno
-2. Agrega `DATABASE_URL` con la URL de conexión a GCP Cloud SQL
-3. Asegúrate de que la IP de Azure esté autorizada en GCP SQL → Conexiones → Redes autorizadas
-
-### Esquema
 ```bash
-# Conectar via Cloud Shell de GCP
-gcloud sql connect autolavado-db --user=autolavado_user --database=autolavado_db
-
-# Ejecutar scripts
-\i /ruta/database/schema.sql
-\i /ruta/database/seed.sql
-
-# Verificar
-SELECT COUNT(*) FROM vehiculos;  -- debe retornar 10
-SELECT COUNT(*) FROM servicios;  -- debe retornar 12
+cd backend/frontend
+python -m http.server 3000
 ```
+
+Abre: http://localhost:3000
+
+> ⚠️ Recuerda cambiar `API_BASE` en `frontend/script.js` a `http://localhost:8000` para desarrollo local.
+
+---
+
+## ⚙️ Configuración de despliegue en Azure
+
+### Variables de aplicación requeridas en App Service
+
+| Variable | Valor |
+|---|---|
+| `DATABASE_URL` | `postgresql://autolavado_user:PASSWORD@IP_GCP:5432/autolavado_db` |
+| `SCM_DO_BUILD_DURING_DEPLOYMENT` | `true` |
+
+### Comando de inicio (Stack settings)
+
+```
+cd backend && pip install -r requirements.txt && uvicorn src.main:app --host 0.0.0.0 --port 8000
+```
+
+### CORS en Azure App Service
+
+> ⚠️ La sección **API → CORS** del portal de Azure debe estar **vacía**.
+> Si tiene algún valor, Azure sobreescribe el CORS de FastAPI y bloquea las peticiones del frontend.
+
+---
+
+## 🔄 Flujo de despliegue automático
+
+Cada `git push` a la rama `master` dispara automáticamente:
+
+1. **GitHub Actions** compila y valida el código
+2. **Azure App Service** recibe el nuevo backend y lo reinicia
+3. **Azure Static Web Apps** actualiza el frontend en segundos
+
+---
+
+## 🛠️ Solución de problemas conocidos
+
+| Problema | Causa | Solución |
+|---|---|---|
+| `Site Disabled (403)` en deploy | App Service detenido | Portal Azure → App Service → Iniciar |
+| `cd: can't cd to /home/site/wwwroot/backend` | Ruta absoluta en startup command | Usar ruta relativa: `cd backend && ...` |
+| `Failed to fetch` en el frontend | CORS bloqueado por Azure | Vaciar lista en App Service → API → CORS |
+| `Application Error` en el navegador | Backend caído o mal startup command | Revisar Log Stream en Kudu |
+| `App Directory Location invalid` en Static Web Apps | `app_location` mal configurado | Usar `backend/frontend` sin `./` ni `\` |
+| Token inválido en Static Web Apps deploy | Token de Azure vencido | Regenerar en Azure → Administrar token → actualizar secret en GitHub |
+
+---
+
+## 📊 Costos de infraestructura
+
+| Servicio | Plan | Costo estimado |
+|---|---|---|
+| Azure App Service | B1 Basic | ~$13 USD/mes (cubierto con créditos) |
+| Azure Static Web Apps | Free | $0 |
+| GCP Cloud SQL | db-f1-micro shared | ~$7 USD/mes (cubierto con créditos) |
+| **Total real** | | **$0** (créditos gratuitos) |
+
+---
+
+## 📸 Capturas de pantalla
+
+Ver carpeta `/backend/docs/screenshots/`
+
+---
+
+## 📹 Video de sustentación
+
+Ver archivo `/video/sustentacion.mp4`

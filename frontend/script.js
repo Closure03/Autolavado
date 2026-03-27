@@ -3,10 +3,9 @@
    Consume API REST en Azure App Service
    DB: GCP Cloud SQL (PostgreSQL)
 ================================================================ */
-
 // ── CONFIGURACIÓN ────────────────────────────────────────────────
 // ⚠️ Reemplazar con la URL real de tu Azure App Service tras el despliegue
-const API_BASE = "https://autolavado-api-hka0hhbcfygjawey.canadacentral-01.azurewebsites.net/";
+const API_BASE = "https://autolavado-api-hka0hhbcfygjawey.canadacentral-01.azurewebsites.net";
 
 // ── ESTADO ───────────────────────────────────────────────────────
 let editandoVehiculoId = null;
