@@ -12,8 +12,8 @@
 | Integrante | Rol |
 |---|---|
 | Santiago Garzón Silva (Líder del proyecto) | Backend: FastAPI, modelos, endpoints REST |
-| Mateo Enrique Bermejo Ramírez | Base de datos GCP Cloud SQL, schema, seed |
-| Jonathan Pedroza Bernal | Frontend HTML/CSS/JS, despliegue Azure Static Web Apps |
+| Mateo Enrique Bermejo Ramírez | Frontend HTML/CSS/JS, despliegue Azure Static Web Apps |
+| Jonathan Pedroza Bernal | Base de datos GCP Cloud SQL, schema, seed |
 
 ---
 
@@ -69,26 +69,26 @@ Sistema CRUD completo para la gestión de vehículos y servicios de un autolavad
                                │ HTTPS
                                ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    MICROSOFT AZURE                               │
-│                                                                  │
-│  ┌──────────────────────────┐                                    │
+│                    MICROSOFT AZURE                              │
+│                                                                 │
+│  ┌──────────────────────────┐                                   │
 │  │  Azure Static Web Apps   │  https://icy-forest-...           │
-│  │  HTML / CSS / JavaScript │                                    │
-│  └────────────┬─────────────┘                                    │
-│               │ HTTPS → API REST                                 │
-│               ▼                                                  │
-│  ┌──────────────────────────┐                                    │
+│  │  HTML / CSS / JavaScript │                                   │
+│  └────────────┬─────────────┘                                   │
+│               │ HTTPS → API REST                                │
+│               ▼                                                 │
+│  ┌──────────────────────────┐                                   │
 │  │  Azure App Service (B1)  │  autolavado-api-hka0...           │
-│  │  FastAPI + Uvicorn       │  Python 3.11                       │
-│  │  Startup: cd backend &&  │                                    │
-│  │  uvicorn src.main:app    │                                    │
-│  └────────────┬─────────────┘                                    │
+│  │  FastAPI + Uvicorn       │  Python 3.11                      │
+│  │  Startup: cd backend &&  │                                   │
+│  │  uvicorn src.main:app    │                                   │
+│  └────────────┬─────────────┘                                   │
 └───────────────┼─────────────────────────────────────────────────┘
                 │ TCP 5432 / SSL
                 ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                  GOOGLE CLOUD PLATFORM                           │
-│                                                                  │
+│                  GOOGLE CLOUD PLATFORM                          │
+│                                                                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │  Cloud SQL — PostgreSQL 15                               │   │
 │  │  Instancia: autolavado-db  ·  Región: us-central1        │   │
