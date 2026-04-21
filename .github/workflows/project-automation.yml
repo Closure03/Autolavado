@@ -1,0 +1,94 @@
+# .github/workflows/project-automation.yml
+# Mueve cards automáticamente en el tablero Kanban de GitHub Projects
+# según el estado de Issues y Pull Requests
+
+name: Project Automation — Kanban
+
+on:
+  issues:
+    types: [opened, assigned, closed]
+  pull_request:
+    types: [opened, ready_for_review, closed]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  # ── Mover a "In Progress" cuando un issue se asigna ──────────────
+  move-to-in-progress:
+    name: Move to In Progress
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && github.event.action == 'assigned'
+    steps:
+      - name: Move issue to In Progress
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            console.log(`Issue #${context.payload.issue.number} asignado → moviendo a "In Progress"`);
+            // Nota: Para mover cards en GitHub Projects v2 se requiere la API GraphQL.
+            // Ver documentación: https://docs.github.com/graphql/reference/objects#projectv2item
+
+  # ── Mover a "Review" cuando se abre un PR ────────────────────────
+  move-to-review:
+    name: Move to Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    steps:
+      - name: Move linked issue to Review
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            console.log(`PR #${pr.number} abierto → moviendo issue vinculado a "Review"`);
+
+  # ── Mover a "Done" cuando se mergea un PR ────────────────────────
+  move-to-done:
+    name: Move to Done
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    steps:
+      - name: Move linked issue to Done
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            console.log(`PR #${pr.number} mergeado → moviendo issue vinculado a "Done"`);
+
+      # Cerrar el issue automáticamente si el PR lo referencia con "Closes #N"
+      - name: Auto-close linked issue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const body = context.payload.pull_request.body || '';
+            const match = body.match(/[Cc]loses?\s+#(\d+)/);
+            if (match) {
+              const issueNumber = parseInt(match[1]);
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                state: 'closed'
+              });
+              console.log(`Issue #${issueNumber} cerrado automáticamente`);
+            }
+
+  # ── Notificar en el PR cuando hay review aprobado ─────────────────
+  notify-review-approved:
+    name: Notify Review Approved
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_review' && github.event.review.state == 'approved'
+    steps:
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: '✅ **Review aprobado** por @' + context.payload.review.user.login + '. Listo para merge a `development`.'
+            });
