@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # Cargar variables de entorno desde .env
 load_dotenv()
 
-try:
+try: 
     from src.database import engine, SessionLocal
 
     # Intentar conectar
