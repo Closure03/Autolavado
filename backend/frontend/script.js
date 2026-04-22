@@ -5,7 +5,7 @@
 ================================================================ */
 // ── CONFIGURACIÓN ────────────────────────────────────────────────
 // ⚠️ Reemplazar con la URL real de tu Azure App Service tras el despliegue
-const API_BASE = "https://autolavado-api-hka0hhbcfygjawey.canadacentral-01.azurewebsites.net";
+const API_BASE = "https://autolavado-66538308150.northamerica-northeast1.run.app";
 
 // ── ESTADO ───────────────────────────────────────────────────────
 let editandoVehiculoId = null;

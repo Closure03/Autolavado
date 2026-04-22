@@ -1,25 +1,23 @@
-"""database.py — Configuración de la base de datos GCP Cloud SQL (PostgreSQL)"""
-
+"""database.py — Conexión SQLAlchemy — GCP Cloud SQL"""
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
 
-# ── Configuración de credenciales ──
-# Las credenciales se obtienen de variables de entorno para seguridad.
-# En desarrollo, puedes usar un archivo .env (instala python-dotenv)
-# En producción, configura las variables de entorno en Azure App Service.
+# Lee desde variable de entorno.
+# Formato Cloud Run (socket):
+# postgresql://user:pass@/db?host=/cloudsql/PROJECT:REGION:INSTANCE
+# Formato local (IP pública):  postgresql://user:pass@IP:5432/db
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://postgres:password@localhost:5432/autolavado_db"  # fallback local
+)
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+    pool_size=5,
+    max_overflow=10,
+)
 
-if not DATABASE_URL:
-    raise ValueError("DATABASE_URL no está configurada. Define la variable de entorno DATABASE_URL.")
-
-# ── Motor SQLAlchemy ──
-engine = create_engine(DATABASE_URL, echo=True)  # echo=True para logs en desarrollo
-
-# ── Sesión ──
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# ── Base para modelos ──
 Base = declarative_base()
