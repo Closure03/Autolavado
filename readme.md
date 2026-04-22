@@ -13,8 +13,8 @@
 | Rol | Nombre | GitHub |
 |---|---|---|
 | 🎯 Product Owner / DevOps Lead | **Santiago Garzón** | @SantiagoGarzon |
-| ⚙️ Frontend Developer / QA | **Mateo Bermejo** | @MateoBermejo |
-| 🎨 Backend Developer | **Jonathan Pedroza** | @JonathanPedroza |
+| ⚙️ Frontend Developer / QA | **Jonathan Pedroza** | @JonathanPedroza |
+| 🎨 Backend Developer | **Mateo Bermejo** | @MateoBermejo |
 
 ---
 
