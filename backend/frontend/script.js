@@ -1,15 +1,17 @@
 /* ================================================================
    script.js — AutoLavado Cloud
-   Consume API REST en Azure App Service
-   DB: GCP Cloud SQL (PostgreSQL)
+   Consume API REST en GCP Cloud Run
+   DB: GCP Cloud SQL (PostgreSQL 15) — us-east1
+   Frontend: GCP Cloud Storage
 ================================================================ */
+
 // ── CONFIGURACIÓN ────────────────────────────────────────────────
-// ⚠️ Reemplazar con la URL real de tu Azure App Service tras el despliegue
-const API_BASE = "https://autolavado-66538308150.northamerica-northeast1.run.app";
+// URL del servicio Cloud Run en GCP
+const API_BASE = "https://autolavado-api-66538308150.us-central1.run.app";
 
 // ── ESTADO ───────────────────────────────────────────────────────
 let editandoVehiculoId = null;
-let vehiculosCache     = [];   // para el select de servicios y la tabla
+let vehiculosCache     = [];   // caché para el select de servicios y la tabla
 
 // ── PRECIOS SUGERIDOS ────────────────────────────────────────────
 const PRECIOS = {
@@ -36,6 +38,10 @@ const ESTADO_LABEL = {
 };
 
 // ── UTILIDADES ───────────────────────────────────────────────────
+
+/**
+ * Wrapper de fetch con manejo de errores centralizado.
+ */
 async function apiFetch(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
     headers: { "Content-Type": "application/json" },
@@ -50,6 +56,7 @@ async function apiFetch(path, options = {}) {
   return res.json();
 }
 
+/** Muestra un toast de notificación temporal */
 function showToast(msg, tipo = "success") {
   const t = document.getElementById("toast");
   t.textContent = msg;
@@ -59,6 +66,7 @@ function showToast(msg, tipo = "success") {
   t._tid = setTimeout(() => t.classList.add("hidden"), 3200);
 }
 
+/** Controla estados de carga/error de una sección */
 function setLoadingState(prefix, loading, error = null) {
   document.getElementById(`loading-${prefix}`).classList.toggle("hidden", !loading);
   const errEl = document.getElementById(`error-${prefix}`);
@@ -68,12 +76,20 @@ function setLoadingState(prefix, loading, error = null) {
   else if (loading) document.getElementById(`tabla-${prefix}`).classList.add("hidden");
 }
 
+/** Formatea un número como moneda COP */
 function formatCOP(n) {
-  return new Intl.NumberFormat("es-CO", { style:"currency", currency:"COP", maximumFractionDigits:0 }).format(n);
+  return new Intl.NumberFormat("es-CO", {
+    style:"currency", currency:"COP", maximumFractionDigits:0
+  }).format(n);
 }
+
+/** Formatea una fecha ISO a formato legible en español */
 function formatFecha(iso) {
   if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("es-CO", { day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" });
+  return new Date(iso).toLocaleDateString("es-CO", {
+    day:"2-digit", month:"short", year:"numeric",
+    hour:"2-digit", minute:"2-digit"
+  });
 }
 
 // ── NAVEGACIÓN ───────────────────────────────────────────────────
@@ -90,7 +106,7 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
 });
 
 // ════════════════════════════════════════════════════════════════
-//  VEHÍCULOS
+//  VEHÍCULOS — entidad1 (CRUD completo)
 // ════════════════════════════════════════════════════════════════
 
 async function cargarVehiculos() {
@@ -107,7 +123,7 @@ async function cargarVehiculos() {
 function renderTablaVehiculos(lista) {
   const tbody = document.getElementById("tbody-vehiculos");
   if (!lista.length) {
-    tbody.innerHTML = `<tr><td colspan="8" class="empty-row">Sin vehículos registrados</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted)">Sin vehículos registrados</td></tr>`;
     return;
   }
   tbody.innerHTML = lista.map(v => `
@@ -256,7 +272,7 @@ document.getElementById("modal-overlay").addEventListener("click", e => {
 });
 
 // ════════════════════════════════════════════════════════════════
-//  SERVICIOS
+//  SERVICIOS — entidad2
 // ════════════════════════════════════════════════════════════════
 
 async function cargarServicios() {
@@ -274,7 +290,7 @@ async function cargarServicios() {
 function renderTablaServicios(lista) {
   const tbody = document.getElementById("tbody-servicios");
   if (!lista.length) {
-    tbody.innerHTML = `<tr><td colspan="7" class="empty-row">Sin servicios registrados</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">Sin servicios registrados</td></tr>`;
     return;
   }
   tbody.innerHTML = lista.map(s => {
@@ -307,7 +323,7 @@ document.getElementById("btn-nuevo-servicio").addEventListener("click", async ()
   document.getElementById("form-servicio").classList.remove("hidden");
 });
 
-// Precio sugerido automático al cambiar tipo
+// Precio sugerido automático al cambiar tipo de servicio
 document.getElementById("s-tipo").addEventListener("change", function() {
   const precio = PRECIOS[this.value];
   if (precio) document.getElementById("s-precio").value = precio;
@@ -345,7 +361,9 @@ async function cargarVehiculosSelect() {
   if (!vehiculosCache.length) vehiculosCache = await apiFetch("/api/vehiculos");
   const sel = document.getElementById("s-vehiculo");
   sel.innerHTML = vehiculosCache.length
-    ? vehiculosCache.map(v => `<option value="${v.id}">${v.placa} — ${v.propietario} (${v.marca} ${v.modelo})</option>`).join("")
+    ? vehiculosCache.map(v =>
+        `<option value="${v.id}">${v.placa} — ${v.propietario} (${v.marca} ${v.modelo})</option>`
+      ).join("")
     : `<option value="">Sin vehículos registrados</option>`;
 }
 

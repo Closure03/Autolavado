@@ -1,23 +1,23 @@
 # .github/workflows/gcp-frontend-deploy.yml
-# Deploy automático del frontend estático → Google Cloud Storage
-# Se ejecuta en cada push a main que modifique archivos del frontend
+# Deploy automático del frontend → Google Cloud Storage
+# Se activa en cada push a master que modifique archivos del frontend
 
 name: Deploy Frontend → Cloud Storage
 
 on:
   push:
-    branches:
-      - main
+    branches: [master]
     paths:
       - 'backend/frontend/**'
   workflow_dispatch:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  BUCKET_NAME: autolavado-frontend
+  # Nombre real del bucket — debe coincidir con el bucket ya creado
+  BUCKET_NAME: autolavado-frontend-robust-carver-494005-v6
 
 jobs:
-  deploy-frontend:
+  deploy:
     name: Upload to Cloud Storage
     runs-on: ubuntu-latest
     permissions:
@@ -25,33 +25,25 @@ jobs:
       id-token: write
 
     steps:
-      # 1. Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Autenticación con GCP
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      # 3. Configurar gcloud
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      # 4. Subir archivos al bucket
-      # ⚠️ Los archivos se suben desde backend/frontend/
-      - name: Upload frontend files to Cloud Storage
+      - name: Upload frontend to Cloud Storage
         run: |
           gsutil -m cp -r backend/frontend/* gs://${{ env.BUCKET_NAME }}/
 
-      # 5. Verificar que index.html es accesible
       - name: Verify deployment
         run: |
           URL="https://storage.googleapis.com/${{ env.BUCKET_NAME }}/index.html"
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
-          if [ "$STATUS" = "200" ]; then
-            echo "✅ Frontend desplegado en: $URL"
-          else
-            echo "⚠️  Status HTTP: $STATUS — verificar configuración del bucket"
-          fi
+          echo "Frontend URL: $URL"
+          echo "Status: $STATUS"
+          [ "$STATUS" = "200" ] && echo "✅ Frontend desplegado correctamente" || echo "⚠️ Verificar acceso público del bucket"
