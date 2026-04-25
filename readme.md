@@ -4,7 +4,7 @@
 > Fundación Universitaria Los Libertadores
 
 [![Deploy Backend](https://github.com/Closure03/Autolavado/actions/workflows/gcp-backend-deploy.yml/badge.svg)](https://github.com/Closure03/Autolavado/actions)
-[![Deploy Frontend](https://github.com/Closure03/Autolavado/actions/workflows/gcp-frontend-deploy.yml/badge.svg)](https://github.com/Closure03/Autolavado/actions)
+[![Deploy Frontend](https://storage.googleapis.com/autolavado-frontend-robust-carver-494005-v6/index.html)
 
 ---
 
