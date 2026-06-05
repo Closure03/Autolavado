@@ -1,318 +1,203 @@
-# 🚗 AutoLavado Cloud — Gestión Colaborativa con GitHub Projects
+# 👥 Equipo de Desarrollo
 
-> **Proyecto 2 — Desarrollo de Aplicaciones en la Nube**
-> Fundación Universitaria Los Libertadores
-
-[![Deploy Backend](https://github.com/Closure03/Autolavado/actions/workflows/gcp-backend-deploy.yml/badge.svg)](https://github.com/Closure03/Autolavado/actions)
-[![Deploy Frontend](https://storage.googleapis.com/autolavado-frontend-robust-carver-494005-v6/index.html)
-
----
-
-## 👥 Equipo de Desarrollo
-
-| Rol | Nombre | GitHub |
-|---|---|---|
-| 🎯 Product Owner / DevOps Lead | **Santiago Garzón** | @SantiagoGarzon |
-| ⚙️ Frontend Developer / QA | **Jonathan Pedroza** | @JonathanPedroza |
-| 🎨 Backend Developer | **Mateo Bermejo** | @MateoBermejo |
+| Rol                          | Nombre             | GitHub               |
+|------------------------------|--------------------|----------------------|
+| 🎯 Product Owner / DevOps Lead | **Santiago Garzón** | [@SantiagoGarzon](https://github.com/SantiagoGarzon) |
+| ⚙️ Frontend Developer / QA     | **Jonathan Pedroza** | [@JonathanPedroza](https://github.com/JonathanPedroza) |
+| 🎨 Backend Developer           | **Mateo Bermejo**   | [@MateoBermejo](https://github.com/MateoBermejo) |
 
 ---
 
-## 📋 Descripción del Proyecto
+# 🚗 Autolavado Cloud Monitoring System
 
-Sistema CRUD full-stack para la gestión de vehículos y servicios de un autolavado. Desarrollado colaborativamente en 3 sprints con metodología **Kanban**, integrando CI/CD automático y despliegue completo en **Google Cloud Platform**.
-
----
-
-## 🏗️ Arquitectura
-
-| Componente | Tecnología | Servicio GCP |
-|---|---|---|
-| **Frontend** | HTML5 / CSS3 / JavaScript | Cloud Storage + Cloud CDN |
-| **Backend** | FastAPI (Python 3.11) | Cloud Run |
-| **Base de datos** | PostgreSQL 15 | Cloud SQL |
-| **CI/CD** | GitHub Actions | Cloud Build (opcional) |
-| **Contenedores** | Docker | Artifact Registry |
-| **Infraestructura** | GCP | us-central1 |
-
-### Diagrama de arquitectura
-
-```
-┌──────────────────────────────────────────────────────┐
-│               GOOGLE CLOUD PLATFORM                  │
-│                                                      │
-│  ┌──────────────────────┐                            │
-│  │  Cloud Storage       │  Frontend HTML/CSS/JS      │
-│  │  + Cloud CDN         │  autolavado-frontend       │
-│  └──────────┬───────────┘                            │
-│             │ HTTPS                                  │
-│             ▼                                        │
-│  ┌──────────────────────┐                            │
-│  │  Cloud Run           │  Backend FastAPI           │
-│  │  (Docker Container)  │  autolavado-api            │
-│  └──────────┬───────────┘                            │
-│             │ TCP 5432                               │
-│             ▼                                        │
-│  ┌──────────────────────┐                            │
-│  │  Cloud SQL           │  PostgreSQL 15             │
-│  │  autolavado-db       │  us-central1               │
-│  └──────────────────────┘                            │
-└──────────────────────────────────────────────────────┘
-```
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-REST_API-green)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)
+![Prometheus](https://img.shields.io/badge/Prometheus-Monitoring-orange)
+![Grafana](https://img.shields.io/badge/Grafana-Dashboard-F46800)
+![Status](https://img.shields.io/badge/Status-Completed-success)
 
 ---
 
-## 📊 GitHub Project — Tablero Kanban
+## 📖 Descripción
 
-🔗 **[Ver GitHub Project](https://github.com/Closure03/Autolavado/projects)**
-
-### Columnas del tablero
-
-| Columna | Descripción |
-|---|---|
-| **Backlog** | Historias pendientes de priorizar |
-| **Ready** | Listas para iniciar en el sprint |
-| **In Progress** | En desarrollo activo |
-| **Review** | En code review / PR abierto |
-| **Done** | Completadas y mergeadas |
-
-### Campos personalizados configurados
-
-| Campo | Opciones |
-|---|---|
-| Sprint | Sprint 1, Sprint 2, Sprint 3 |
-| Responsable | @SantiagoGarzon, @MateoBermejo, @JhonatanPedroza |
-| Prioridad | Alta, Media, Baja |
-| Estimación | 1, 2, 3, 5, 8 (puntos de historia) |
-| Tipo | Feature, Bug, Documentation, DevOps |
+**Autolavado** es una aplicación web para la gestión de vehículos y servicios de lavado, desplegada en contenedores Docker y con monitoreo en tiempo real mediante Prometheus y Grafana.  
+Proyecto académico de **Computación en la Nube**, integrando buenas prácticas de despliegue, observabilidad y seguridad.
 
 ---
 
-## 🗂️ Estructura del Repositorio
+## 🎯 Objetivos
 
-```
-Autolavado/
-├── .github/
-│   ├── workflows/
-│   │   ├── project-automation.yml      # Mueve cards automáticamente
-│   │   ├── gcp-backend-deploy.yml      # Deploy backend → Cloud Run
-│   │   └── gcp-frontend-deploy.yml     # Deploy frontend → Cloud Storage
-│   └── PULL_REQUEST_TEMPLATE.md
-├── backend/
-│   ├── database/
-│   │   ├── schema.sql
-│   │   └── seed.sql
-│   ├── docs/
-│   ├── frontend/
-│   │   ├── index.html
-│   │   ├── style.css
-│   │   └── script.js
-│   ├── src/
+- 🚘 Gestionar vehículos y servicios de autolavado.  
+- ⚡ Implementar una API REST moderna con FastAPI.  
+- 🗄️ Utilizar PostgreSQL como base de datos.  
+- 🐳 Desplegar la solución con Docker Compose.  
+- 📈 Implementar observabilidad con Prometheus y Grafana.  
+- 🔐 Aplicar seguridad básica mediante API Key.  
+- 🔎 Desarrollar búsqueda de vehículos por placa.  
+
+---
+
+## 🏗️ Arquitectura de la Solución
+
+```text
+┌──────────────────────┐
+│      Frontend        │
+│ HTML + CSS + JS      │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│     FastAPI API      │
+│     Backend REST     │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│      PostgreSQL      │
+│      Database        │
+└──────────────────────┘
+
+           │
+           ▼
+
+┌──────────────────────┐
+│     Prometheus       │
+│   Metrics Collector  │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│      Grafana         │
+│      Dashboard       │
+└──────────────────────┘
+🛠️ Tecnologías Utilizadas
+Categoría	Tecnología
+Backend	FastAPI
+Lenguaje	Python 3.11
+ORM	SQLAlchemy
+Base de Datos	PostgreSQL 16
+Frontend	HTML, CSS, JavaScript
+Contenedores	Docker
+Orquestación	Docker Compose
+Monitoreo	Prometheus
+Visualización	Grafana
+
+
+🚘 Funcionalidades Implementadas
+Gestión de Vehículos: Crear, consultar, actualizar, eliminar.
+
+Gestión de Servicios: Registrar, consultar, eliminar.
+
+Relación Vehículo-Servicio: Consultar servicios asociados.
+
+Búsqueda por Placa: Endpoint /api/vehiculos/search?placa=ABC.
+
+🔐 Seguridad
+Autenticación mediante API Key.
+
+Operaciones protegidas: POST, PUT, DELETE.
+
+Header requerido:
+
+http
+x-api-key: autolavado2026
+📈 Observabilidad
+Endpoint de métricas: /metrics.
+
+Métricas:
+
+http_requests_total → Total de peticiones.
+
+http_request_duration_seconds → Tiempo de respuesta.
+
+active_vehicles → Vehículos activos.
+
+📊 Dashboard Grafana
+Total de solicitudes → http_requests_total
+
+Vehículos activos → active_vehicles
+
+Solicitudes por minuto → rate(http_requests_total[1m])
+
+Latencia promedio →
+
+promql
+rate(http_request_duration_seconds_sum[1m]) /
+rate(http_request_duration_seconds_count[1m])
+📂 Estructura del Proyecto
+text
+AUTOLAVADO
+│
+├── backend
+│   ├── src
+│   │   ├── database.py
 │   │   ├── main.py
 │   │   ├── models.py
-│   │   ├── schemas.py
-│   │   └── database.py
-│   ├── Dockerfile                      # Contenedor del backend
-│   ├── .dockerignore
+│   │   └── schemas.py
+│   ├── frontend
+│   │   ├── index.html
+│   │   ├── script.js
+│   │   └── style.css
+│   ├── Dockerfile
 │   └── requirements.txt
-├── docs/
-│   ├── user-stories.md                 # Todas las historias de usuario
+│
+├── prometheus
+│   └── prometheus.yml
+│
+├── docs
 │   ├── api-documentation.md
-│   ├── deployment-guide-gcp.md
-│   ├── sprint-retrospectives.md
-│   └── screenshots/
-├── video/
-│   └── sustentacion.mp4
-└── readme.md
-```
-
----
-
-## 🏃 Estrategia de Ramas
-
-```
-main (producción — protegida)
-└── development (integración)
-    ├── feature/sprint1-backend-models          → @MateoBermejo
-    ├── feature/sprint1-database-setup          → @MateoBermejo
-    ├── feature/sprint1-api-vehiculos           → @MateoBermejo
-    ├── feature/sprint1-api-servicios           → @MateoBermejo
-    ├── feature/sprint1-ci-cd-pipeline          → @SantiagoGarzon
-    ├── feature/sprint1-docker-config           → @SantiagoGarzon
-    ├── feature/sprint2-frontend-vehiculos      → @JhonatanPedroza
-    ├── feature/sprint2-frontend-servicios      → @JhonatanPedroza
-    ├── feature/sprint2-frontend-historial      → @JhonatanPedroza
-    ├── feature/sprint2-cors-config             → @MateoBermejo
-    ├── feature/sprint2-gcp-cloud-run           → @SantiagoGarzon
-    ├── feature/sprint2-gcp-cloud-storage       → @SantiagoGarzon
-    ├── feature/sprint3-deploy-backend          → @SantiagoGarzon
-    ├── feature/sprint3-deploy-frontend         → @JhonatanPedroza
-    ├── feature/sprint3-monitoring              → @SantiagoGarzon
-    ├── feature/sprint3-documentation           → @JhonatanPedroza
-    ├── feature/sprint3-readme                  → @SantiagoGarzon
-    └── feature/sprint3-final-testing           → @MateoBermejo
-```
-
-### Flujo de trabajo
-
-1. Crear rama `feature/sprintN-funcionalidad` desde `development`
-2. Desarrollar la funcionalidad
-3. Abrir Pull Request con descripción y criterios de aceptación
-4. Code review obligatorio de al menos 1 compañero
-5. Merge a `development` tras aprobación
-6. Testing en `development`
-7. Release: merge `development` → `main`
-
----
-
-## 🚀 Sprints Completados
-
-### Sprint 1 — Backend y Base de Datos
-
-**Objetivo:** Tener la API REST funcional conectada a Cloud SQL
-
-| Historia | Responsable | Estado | Puntos |
-|---|---|---|---|
-| HU-01: Modelo de datos Vehículo | @MateoBermejo | ✅ Done | 3 |
-| HU-02: Modelo de datos Servicio | @MateoBermejo | ✅ Done | 3 |
-| HU-03: Endpoint CRUD Vehículos | @MateoBermejo | ✅ Done | 5 |
-| HU-04: Endpoint CRUD Servicios | @MateoBermejo | ✅ Done | 5 |
-| HU-05: Configurar Cloud SQL | @SantiagoGarzon | ✅ Done | 3 |
-| HU-06: Docker + CI/CD pipeline | @SantiagoGarzon | ✅ Done | 5 |
-
-**Velocity Sprint 1:** 24 puntos
-
-### Sprint 2 — Frontend e Integración
-
-**Objetivo:** Frontend conectado a la API y desplegado en Cloud Storage
-
-| Historia | Responsable | Estado | Puntos |
-|---|---|---|---|
-| HU-07: Vista listado de vehículos | @JhonatanPedroza | ✅ Done | 3 |
-| HU-08: Formulario crear/editar vehículo | @JhonatanPedroza | ✅ Done | 5 |
-| HU-09: Vista historial de servicios | @JhonatanPedroza | ✅ Done | 3 |
-| HU-10: Configurar CORS en backend | @MateoBermejo | ✅ Done | 2 |
-| HU-11: Deploy backend en Cloud Run | @SantiagoGarzon | ✅ Done | 5 |
-| HU-12: Deploy frontend en Cloud Storage | @SantiagoGarzon | ✅ Done | 3 |
-
-**Velocity Sprint 2:** 21 puntos
-
-### Sprint 3 — Despliegue, Pruebas y Documentación
-
-**Objetivo:** Sistema estable en producción, documentado y probado
-
-| Historia | Responsable | Estado | Puntos |
-|---|---|---|---|
-| HU-13: Pruebas de integración E2E | @MateoBermejo | ✅ Done | 5 |
-| HU-14: Documentación de API | @JhonatanPedroza | ✅ Done | 3 |
-| HU-15: Guía de despliegue GCP | @JhonatanPedroza | ✅ Done | 3 |
-| HU-16: Monitoreo Cloud Logging | @SantiagoGarzon | ✅ Done | 3 |
-| HU-17: README completo | @SantiagoGarzon | ✅ Done | 2 |
-| HU-18: Retrospectiva y métricas | @MateoBermejo | ✅ Done | 2 |
-
-**Velocity Sprint 3:** 18 puntos
-
----
-
-## 📈 Métricas del Proyecto
-
-| Métrica | Valor |
-|---|---|
-| **Velocity promedio** | 21 puntos por sprint |
-| **Historias completadas** | 18/18 |
-| **Total puntos entregados** | 63 puntos |
-| **Bugs encontrados** | 6 |
-| **Tiempo promedio de resolución** | 4 horas |
-| **Pull Requests mergeados** | 18 |
-| **Code reviews realizados** | 18 |
-
----
-
-## 🌐 URLs en Producción (GCP)
-
-| Componente | URL |
-|---|---|
-| **Frontend** | https://storage.googleapis.com/autolavado-frontend/index.html |
-| **Backend API** | https://autolavado-api-XXXX-uc.a.run.app |
-| **Swagger UI** | https://autolavado-api-XXXX-uc.a.run.app/docs |
-| **GitHub Project** | https://github.com/Closure03/Autolavado/projects |
-
----
-
-## ⚙️ Instalación y Uso Local
-
-### Prerrequisitos
-
-```
-Python 3.11+
-Docker
-gcloud CLI
-Git
-```
-
-### 1. Clonar el repositorio
-
-```bash
-git clone https://github.com/Closure03/Autolavado.git
+│   ├── security.md
+│   └── sprint-retrospectives.md
+│
+├── traffic.py
+├── docker-compose.yml
+└── README.md
+⚙️ Instalación
+bash
+git clone <repositorio>
 cd Autolavado
-git checkout development
-```
+docker compose build
+docker compose up
+🌐 Servicios Disponibles
+Servicio	URL
+Backend	http://localhost:8000
+Swagger	http://localhost:8000/docs
+Prometheus	http://localhost:9090
+Grafana	http://localhost:3000
+Frontend	http://127.0.0.1:5500/backend/frontend/index.html
 
-### 2. Configurar variables de entorno
 
-```bash
-cp backend/.env.example backend/.env
-# Editar backend/.env con tus credenciales de Cloud SQL
-```
+🚦 Generación de Tráfico
+bash
+python traffic.py
+Genera solicitudes a GET /api/vehiculos para visualizar actividad en Prometheus y Grafana.
 
-```env
-DATABASE_URL=postgresql://autolavado_user:PASSWORD@/autolavado_db?host=/cloudsql/PROJECT_ID:us-central1:autolavado-db
-```
+🧪 Casos de Prueba
+POST /api/vehiculos → Crear vehículo
 
-### 3. Correr con Docker localmente
+GET /api/vehiculos → Consultar vehículos
 
-```bash
-cd backend
-docker build -t autolavado-api .
-docker run -p 8000:8000 --env-file .env autolavado-api
-```
+GET /api/vehiculos/search?placa=ABC → Buscar vehículo
 
-### 4. Correr sin Docker
+PUT /api/vehiculos/{id} → Actualizar vehículo
 
-```bash
-cd backend
-python -m venv antenv && source antenv/bin/activate
-pip install -r requirements.txt
-uvicorn src.main:app --reload --port 8000
-```
+DELETE /api/vehiculos/{id} → Eliminar vehículo
 
-### 5. Frontend local
+✅ Estado del Proyecto
+Componente	Estado
+FastAPI	✅
+PostgreSQL	✅
+Docker Compose	✅
+API Key	✅
+Funcionalidad de Búsqueda	✅
+Prometheus	✅
+Grafana	✅
+Frontend	✅
+Traffic Generator	✅
+Observabilidad	✅
 
-```bash
-cd backend/frontend
-python -m http.server 3000
-# http://localhost:3000
-```
 
----
-
-## 📚 Lecciones Aprendidas
-
-| Desafío | Lección |
-|---|---|
-| YAML del frontend tenía barra invertida `\` | Los paths en YAML siempre con `/` en cualquier SO |
-| Cloud Run requiere `PORT` como variable de entorno | Uvicorn debe escuchar en `$PORT`, no en `8000` hardcodeado |
-| CORS bloqueado entre Cloud Storage y Cloud Run | Configurar `allow_origins` con la URL exacta del bucket |
-| Secrets de GCP en GitHub Actions | Usar `google-github-actions/auth` con Workload Identity |
-| La rama `main` se rompió en un merge | Proteger `main` con branch protection rules desde el inicio |
-
----
-
-## 🔗 Enlaces Importantes
-
-- [Aplicación en producción](https://storage.googleapis.com/autolavado-frontend/index.html)
-- [GitHub Project — Tablero Kanban](https://github.com/Closure03/Autolavado/projects)
-- [Historias de usuario](./docs/user-stories.md)
-- [Guía de despliegue GCP](./docs/deployment-guide-gcp.md)
-- [Documentación de API](./backend/docs/api-documentation.md)
-- [Retrospectivas de sprint](./docs/sprint-retrospectives.md)
+🎉 Resultado Final
+Sistema completamente funcional, desplegado en contenedores Docker, con monitoreo en tiempo real, autenticación básica y métricas operacionales listas para observación mediante Prometheus y Grafana.
