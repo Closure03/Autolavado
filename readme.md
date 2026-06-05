@@ -201,3 +201,229 @@ Observabilidad	✅
 
 🎉 Resultado Final
 Sistema completamente funcional, desplegado en contenedores Docker, con monitoreo en tiempo real, autenticación básica y métricas operacionales listas para observación mediante Prometheus y Grafana.
+
+--------------------------------------------------------------------------------------------------------------
+.
+
+🚀 Guía de Uso del Sistema
+1. Iniciar Docker Desktop
+
+Antes de ejecutar el proyecto, verificar que Docker Desktop esté iniciado correctamente.
+
+Validar:
+
+docker version
+2. Construir los contenedores
+
+Desde la raíz del proyecto:
+
+docker compose build
+
+Este comando construye:
+
+Backend FastAPI
+PostgreSQL
+Prometheus
+Grafana
+3. Levantar el entorno completo
+docker compose up
+
+Si todo funciona correctamente aparecerá:
+
+Application startup complete.
+Uvicorn running on http://0.0.0.0:8000
+4. Verificar contenedores
+
+Ejecutar:
+
+docker ps
+
+Deben aparecer:
+
+autolavado-backend
+autolavado-postgres
+autolavado-prometheus
+autolavado-grafana
+🌐 Acceso a los servicios
+Backend API
+http://localhost:8000
+Swagger
+
+Documentación interactiva:
+
+http://localhost:8000/docs
+Prometheus
+http://localhost:9090
+Grafana
+http://localhost:3000
+
+Credenciales:
+
+Usuario: admin
+Contraseña: admin
+Frontend
+
+Abrir con Live Server:
+
+http://127.0.0.1:5500/backend/frontend/index.html
+🔐 Autenticación
+
+Las operaciones de escritura requieren API Key.
+
+Header requerido
+x-api-key: autolavado2026
+
+Se utiliza para:
+
+Crear vehículos
+Actualizar vehículos
+Eliminar vehículos
+Crear servicios
+Eliminar servicios
+🚘 Gestión de Vehículos
+Crear Vehículo
+
+Endpoint:
+
+POST /api/vehiculos
+
+Body:
+
+{
+  "placa": "ABC123",
+  "marca": "Mazda",
+  "modelo": "2022",
+  "propietario": "Santiago"
+}
+
+Header:
+
+x-api-key: autolavado2026
+Consultar Vehículos
+GET /api/vehiculos
+
+Retorna todos los vehículos registrados.
+
+Buscar Vehículo por Placa
+
+Nueva funcionalidad implementada.
+
+GET /api/vehiculos/search?placa=ABC
+
+Ejemplo:
+
+GET /api/vehiculos/search?placa=123
+
+Retorna coincidencias parciales.
+
+Actualizar Vehículo
+PUT /api/vehiculos/{id}
+
+Requiere:
+
+x-api-key
+Eliminar Vehículo
+DELETE /api/vehiculos/{id}
+
+Requiere:
+
+x-api-key
+🧽 Gestión de Servicios
+Crear Servicio
+POST /api/servicios
+
+Body de ejemplo:
+
+{
+  "vehiculo_id": 1,
+  "tipo_servicio": "Lavado Premium",
+  "precio": 35000
+}
+
+Requiere API Key.
+
+Consultar Servicios
+GET /api/servicios
+Consultar Servicios de un Vehículo
+GET /api/vehiculos/{vehiculo_id}/servicios
+
+Permite visualizar el historial de servicios asociados a un vehículo.
+
+📊 Monitoreo
+Ver métricas expuestas
+http://localhost:8000/metrics
+
+Métricas disponibles:
+
+http_requests_total
+http_request_duration_seconds
+active_vehicles
+Consultar métricas en Prometheus
+
+Abrir:
+
+http://localhost:9090
+
+Ejemplos:
+
+Total de solicitudes
+http_requests_total
+Vehículos activos
+active_vehicles
+Solicitudes por minuto
+rate(http_requests_total[1m])
+📈 Dashboard Grafana
+Configurar Prometheus
+
+Agregar Data Source:
+
+http://prometheus:9090
+Panel 1
+
+Total de solicitudes:
+
+http_requests_total
+Panel 2
+
+Solicitudes por minuto:
+
+rate(http_requests_total[1m])
+Panel 3
+
+Vehículos registrados:
+
+active_vehicles
+🚦 Generar Tráfico de Prueba
+
+Instalar dependencia:
+
+pip install requests
+
+Ejecutar:
+
+py traffic.py
+
+El script generará múltiples solicitudes al backend.
+
+Posteriormente se podrá observar el incremento de métricas en:
+
+Prometheus
+Grafana
+🛑 Detener el Proyecto
+
+Detener contenedores:
+
+docker compose down
+✅ Flujo de Validación Completo
+Levantar Docker Compose.
+Abrir Swagger.
+Crear un vehículo usando API Key.
+Consultar vehículos registrados.
+Buscar vehículo por placa.
+Crear un servicio asociado.
+Consultar historial de servicios.
+Ejecutar traffic.py.
+Verificar métricas en Prometheus.
+Visualizar dashboard en Grafana.
+Probar la aplicación desde el Frontend.
+Detener el entorno con docker compose down.
